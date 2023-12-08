@@ -8,7 +8,7 @@ router = APIRouter()
 audio_service = AudioService()
 
 @router.post("/process-audio")
-async def process_audio(request: AudioRequest, file: UploadFile = File(...)):
+async def process_audio(file: UploadFile = File(...)):
 
     # Check if the uploaded file is an audio file
     if not file.content_type.startswith('audio/'):
@@ -26,7 +26,7 @@ async def process_audio(request: AudioRequest, file: UploadFile = File(...)):
         wav_stream = convert_audio_stream_to_wav(audio_stream)
 
         corrected_text = audio_service.generate_corrected_transcript(0, system_prompt, wav_stream)
-        return AudioResponse(corrected_transcription=corrected_text)
+        return {"corrected_transcription : ",corrected_text}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing audio file: {str(e)}")
     
