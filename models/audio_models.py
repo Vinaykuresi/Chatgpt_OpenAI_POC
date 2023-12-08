@@ -1,9 +1,8 @@
 from pydantic import BaseModel
 
 class AudioRequest(BaseModel):
-    # Define request model
-    pass
+    filename: str
 
 class AudioResponse(BaseModel):
-    # Define response model
-    pass
+    original_transcription: str
+    corrected_transcription: str

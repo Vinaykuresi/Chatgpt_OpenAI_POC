@@ -1,13 +1,13 @@
-from fastapi import Depends, APIRouter, UploadFile, File, HTTPException
-from ..dependencies import get_openai_client
-from ..services.document_service import process_document_logic
-import docx
-from io import BytesIO
+from fastapi import APIRouter, UploadFile, File, HTTPException
+from services.document_service import DocumentService
+from utils.file_utils import read_word_document
+from models.document_models import DocumentRequest, DocumentResponse
 
 router = APIRouter()
+document_service = DocumentService()
 
 @router.post("/process-document")
-async def process_document(file: UploadFile = File(...), openai_client=Depends(get_openai_client)):
+async def process_document(request: DocumentRequest, file: UploadFile = File(...)):
     # Check if the uploaded file is a Word document
     if file.content_type != 'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
         raise HTTPException(status_code=400, detail="Invalid file type. Please upload a Word document.")
@@ -15,14 +15,11 @@ async def process_document(file: UploadFile = File(...), openai_client=Depends(g
     # Read the document
     try:
         file_bytes = await file.read()
-        doc = docx.Document(BytesIO(file_bytes))
-        full_text = [para.text for para in doc.paragraphs]
-        document_content = '\n'.join(full_text)
-        defined_text = process_document_logic(document_content)
+        document_content = read_word_document(file_bytes)
+        processed_text = document_service.process_document_logic(document_content, task=request.processing_parameters.task)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-    # For now, just return the extracted text
-    return {"content": defined_text}
+    return DocumentResponse(processed_content=processed_text)
 
 
