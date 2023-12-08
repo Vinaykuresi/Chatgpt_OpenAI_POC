@@ -20,13 +20,21 @@ class OpenAIService:
         :return: Generated text.
         """
         try:
-            response = self.client.Completion.create(
-                engine=model,
-                prompt=prompt,
-                max_tokens=max_tokens,
-                temperature=temperature,
-                **kwargs
-            )
+            # Check if the model is one of the newer models
+            if model in ["gpt-4", "gpt-4 turbo", "gpt-3.5-turbo"]:
+                response = self.client.ChatCompletion.create(
+                    model=model,
+                    messages=[{"role": "system", "content": prompt}]
+                )
+            else:
+                # For legacy models
+                response = self.client.completions.create(
+                    model=model,
+                    prompt=prompt,
+                    max_tokens=max_tokens,
+                    temperature=temperature,
+                    **kwargs
+                )
         except Exception as e:
             raise OpenAIRequestError(f"Error in generating text: {str(e)}")
         

@@ -15,6 +15,20 @@ def read_word_document(file_bytes):
         return '\n'.join(full_text)
     except Exception as e:
         raise DocumentProcessingError(f"Error reading Word document: {str(e)}")
+    
+def read_text_file(file_bytes):
+    """
+    Reads a plain text file from bytes and extracts its text.
+
+    :param file_bytes: The bytes of the text file.
+    :return: Extracted text from the file.
+    """
+    try:
+        text = file_bytes.decode('utf-8')  # Decoding the bytes to a UTF-8 string
+        return text
+    except Exception as e:
+        raise FileHandlingError(f"Error reading text file: {str(e)}")
+
 
 def save_document_to_file(document_content, file_path):
     """

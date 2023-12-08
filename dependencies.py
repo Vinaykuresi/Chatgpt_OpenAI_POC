@@ -1,4 +1,4 @@
-from .config import settings
+from config import settings
 import openai
 
 def get_openai_client():

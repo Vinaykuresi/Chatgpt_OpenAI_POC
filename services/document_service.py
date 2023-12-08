@@ -5,7 +5,7 @@ class DocumentService:
     def __init__(self):
         self.openai_service = OpenAIService()
 
-    def process_document_logic(self, document_content, task="summarize", model="text-davinci-003", max_tokens=100):
+    def process_document_logic(self, document_content, model, task, max_tokens=100):
         """
         Processes the document content using OpenAI's API based on the specified task.
 
