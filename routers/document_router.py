@@ -1,5 +1,6 @@
 from fastapi import Depends, APIRouter, UploadFile, File, HTTPException
 from ..dependencies import get_openai_client
+from ..services.document_service import process_document_logic
 import docx
 from io import BytesIO
 
@@ -17,10 +18,11 @@ async def process_document(file: UploadFile = File(...), openai_client=Depends(g
         doc = docx.Document(BytesIO(file_bytes))
         full_text = [para.text for para in doc.paragraphs]
         document_content = '\n'.join(full_text)
+        defined_text = process_document_logic(document_content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
     # For now, just return the extracted text
-    return {"content": document_content}
+    return {"content": defined_text}
 
 
