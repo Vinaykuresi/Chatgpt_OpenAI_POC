@@ -14,8 +14,8 @@ To set up this project, follow these steps:
 
 1. **Clone the Repository**
 ```python
-    git clone [your-repo-link]
-    cd [your-project-name]
+    git clone https://github.com/Vinaykuresi/Chatgpt_OpenAI_POC
+    cd Chatgpt_OpenAI_POC
 ```
 
 2. **Create a Virtual Environment (Optional)**
